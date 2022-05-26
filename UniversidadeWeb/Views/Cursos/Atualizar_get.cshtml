@@ -1,0 +1,120 @@
+@model Universidade.Models.CursocomDisciplinas
+
+@{
+    ViewData["Title"] = "Editar Curso";
+}
+
+<div class="text-center">
+    <br>
+    <h2>Editar Curso</h2>
+    <br>
+</div>
+
+<form>
+      <div class="form-group">
+        <label asp-for="curso.nome" class="control-label">Nome: </label>
+        <input asp-for="curso.nome" class="form-control" maxlength="100" required/>
+        <span asp-validation-for="curso.nome" class="text_danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="curso.data_inicio" class="control-label">Data de inicio: </label>
+        <input asp-for="curso.data_inicio" type="date" class="form-control" readonly/>
+        <span asp-validation-for="curso.data_inicio" class="text_danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="curso.data_encerramento" class="control-label">Data de Encerramento: </label>
+        <input asp-for="curso.data_encerramento" type="date" class="form-control" readonly/>
+        <span asp-validation-for="curso.data_encerramento" class="text_danger"></span>
+      </div>
+      <br>
+      <button type="submit" class="btn btn-primary" asp-controller="Cursos" asp-action="Atualizar_post" asp-route-id="@Model.curso.id">Registrar Edição</button>
+      <a class="btn btn-secondary" asp-controller="Home" asp-action="Index">voltar</a>
+</form>
+
+<div>
+  <br>
+  <table class="table" id="tabela">
+    <thead>
+      <tr>
+        <th scope="col">Disciplina</th>
+        <th scope="col">Carga Horária</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach(var disc in Model.disciplinas)
+      {
+        <tr>
+            <td>@disc.nome</td>
+            <td>@disc.carga_horaria</td>
+          </tr>
+      }
+    </tbody>
+  </table>
+<div>
+ 
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">Adicionar Disciplina</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title" id="myModalLabel">Incluir Disciplina</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>       
+      </div>
+
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="control-label">Nome: </label>
+          <input minlength="3" id="_nome" class="form-control" maxlength="100" required/>
+        </div>
+        <button type="button" id="_pesquisar" class="btn btn-primary btn-lg">Pesquisar</button>
+      </div>    
+
+      <div id="div_vazia"></div>        
+      
+    </div> 
+  </div>
+</div>
+
+<script>
+    
+  $(document).on('click', '#_pesquisar', pesquisar)
+  function pesquisar() {  
+    if($("#_nome").val() == ''){
+      alert("A pesquisa está vazia digite pelo menos 3 caracteres")     
+    }else{
+      var url = "@Url.Action("ModalFiltro", "Cursos")"     
+      var nome = document.getElementById("_nome").value
+      var id_curso = "@Model.curso.id"
+      $.ajax(url, {
+        method: 'Get',
+        data: {curso_id:id_curso,
+              search:nome},
+      }).done(function (response) {
+        $("#div_vazia").html(response)
+      }).fail(function () {
+          swal('Atenção', 'Ocorreu um erro!', 'error')
+      });  
+    }  
+  }
+
+  $(document).on('change', '#_nome', min3) //caso digite menos que 3 caracteres
+  function min3() {
+
+    if($("#_nome").val().length < 3){
+      alert('A pesquisa precisa ter pelo menos 3 letras');
+      document.getElementById("_pesquisar").disabled = true;       
+    }else{
+      document.getElementById("_pesquisar").disabled = false; 
+    }
+  } 
+
+  $(document).on('click', '.close', refresh)
+  function refresh(){
+    location.reload()
+  }
+
+</script>

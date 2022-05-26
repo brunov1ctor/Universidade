@@ -1,0 +1,94 @@
+@model List<Universidade.Models.DisciplinaModel>
+@{
+    ViewData["Title"] = "Disciplinas";
+}
+
+<div class="btn-inicio-main">
+<a asp-controller="Disciplinas" asp-action="Inserir" class="btn btn-outline-success">Nova Disciplina</a>
+</div>
+
+<div class="text-center">
+    <h1 class="display-4">Disciplina Cadastradas</h1>
+</div>
+
+<div>
+  <table class="table" id="tabela">
+    <thead>
+      <tr>
+        <th scope="col">Nome</th>
+        <th scope="col">Carga Horaria</th>
+      </tr>
+    </thead>
+      <tbody>
+        @foreach(var item in Model)
+        {
+          <tr>
+              <td>@item.nome</td>
+              <td>@item.carga_horaria</td>
+              <td>
+                  <div class="btn-group" role="group">  
+                      <a asp-controller="Disciplinas" asp-action="Atualizar_get" asp-route-id="@item.id" class="btn btn-outline-primary">Editar</a>
+                      <a data-value="@item.id" type="button" asp-controller="Disciplinas" asp-action="Deletar" asp-route-id="@item.id" class="btn btn-outline-danger btn_deletar" >Apagar</a>
+                  </div>  
+              </td>
+            </tr>
+        }
+      </tbody>
+  </table>
+</div>
+
+<script>
+  $(document).ready(function () {
+    
+    var url = "@Url.Action("ValidaExclusao", "Disciplinas")";
+    $(document).on('click', '.btn_deletar', ExecutaProximoPasso);
+    
+    function ExecutaProximoPasso() {
+      event.preventDefault();
+      var id_disciplina = $(this).attr("data-value");
+      
+      $.ajax(url, {
+        method: 'Get',
+        data: {id:id_disciplina},
+      }).done(function (response) {
+        if(!response.validar_aluno){
+          alert('Existem alunos vinculadao a disciplina e não será possível excluir');
+        
+        }else{//se aluno for valido ainda tenho que verificar se tem algum curso
+          
+          if(!response.validar_curso){
+            if(confirm('Disciplina vinculada a um curso deseja excluir mesmo assim?')){
+              deletar(id_disciplina);  
+            }else{
+              //escolhido cancelar na confirmação
+            }
+          }else{
+            deletar(id_disciplina);
+          }
+        }
+      }).fail(function () {
+          console.log("Erro")
+      });
+    }   
+  });
+
+  function deletar(id_disciplina){
+
+    var del = "@Url.Action("Deletar", "Disciplinas")"
+    $.ajax(del, {
+    method: 'Get',
+    data: {id:id_disciplina},
+    }).done(function(valido){
+      if(valido.valido){
+        alert('Disciplina deletada com sucesso')
+        location.reload()
+      }else{
+        alert('Não foi possivel deletar a Disciplina')
+      }
+    }).fail(function(){
+      console.log("Erro")
+    });
+    
+  }
+  
+</script>

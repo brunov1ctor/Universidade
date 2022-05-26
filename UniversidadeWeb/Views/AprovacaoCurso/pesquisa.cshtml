@@ -1,0 +1,45 @@
+@model List<Universidade.Models.AprovacaoCursoModel>
+
+<div class="text-center">
+    <h1 class="display-4">Alunos neste curso</h1>
+</div>
+
+<table class="table" id="tabela">
+  <thead>
+    <tr>
+      <th scope="col">Nome</th>
+      <th scope="col">CPF</th>
+      <th scope="col">Idade</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach(var item in Model)
+    {
+      <tr>
+          <td>@item.nome</td>
+          <td>@item.cpf</td>
+          @{
+            DateTime DataNascimento = item.data_nascimento;
+            int Anos = new DateTime(DateTime.Now.Subtract(DataNascimento).Ticks).Year - 1;
+            DateTime AnosTranscorridos = DataNascimento.AddYears(Anos);
+            int Meses = 0;
+            for (int i = 1; i <= 12; i++)
+            {
+                if (AnosTranscorridos.AddMonths(i) == DateTime.Now)
+                {
+                    Meses = i;
+                    break;
+                }
+                else if (AnosTranscorridos.AddMonths(i) >= DateTime.Now)
+                {
+                    Meses = i - 1;
+                    break;
+                }
+            }
+            int Dias = DateTime.Now.Subtract(AnosTranscorridos.AddMonths(Meses)).Days;
+          }
+          <td> @Anos anos @Meses meses @Dias dias</td>
+        </tr>
+    }
+  </tbody>
+</table>

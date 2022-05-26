@@ -1,0 +1,118 @@
+@model List<Universidade.Models.LancarNota>
+
+<!-- Modal -->
+
+<table class="table">   
+    <thead>
+    <tr>
+        <th scope="col">Nome Aluno</th>
+        <th scope="col">Nota</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach(var item in Model)
+    {
+        <tr class = "linhamodal">
+        
+        <td>@item.nome_aluno</td>
+        <td>
+            <input class="inputnota" data-matricula_id="@item.matricula_id" data-aluno_id="@item.aluno_id" value="@item.nota">
+        </td>
+        
+        </tr>
+    }
+    <br>
+    
+    <br>
+    </tbody>
+</table>
+<div class="box-btn">
+      <button type="button" id="_salvar" class="btn btn-outline-success">Salvar</button>
+      <button type="button" id="fechar" class="btn btn-outline-danger" data-dismiss="modal">Fechar</button>
+</div>
+
+        
+<script>
+  $( ".inputnota" ).blur(function() {
+    event.preventDefault();
+    if($(this).val()>=100)
+      alert("Valor maior que 100, não é possivel salvar" );
+  });
+
+  $(document).on('click', '#_salvar', salvar)
+
+  function salvar(){
+    var url = "@Url.Action("Salvar", "Notas")";      
+  
+    var id_disciplina = @Model.First().disciplina_id;  
+    var id_curso = @Model.First().curso_id;
+        
+    var save = true;
+    notas = new Array();  
+    $(".inputnota").each(function(index, obj){
+      if($(this).val()!='' && $(this).not("[value]")){
+      notalist = {} 
+      notalist['aluno_id'] =  parseFloat($(this).attr('data-aluno_id'));
+      notalist['matricula_id'] =  parseFloat($(this).attr('data-matricula_id'));
+      notalist['nota'] =  parseFloat($(this).val());
+      
+      notas.push(notalist);
+      }    
+      
+    });  
+
+    var save = true;
+    
+    for(var item in notas){
+      if(notas[item]['nota']>100){
+        save = false;
+      }
+    }
+
+
+    if(save){
+
+      $.ajax(url, {
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            "curso_id":id_curso,
+            "disciplina_id":id_disciplina,          
+            "notas":notas
+        }),
+      }).done(function (response) {
+        if(response){
+          alert("Notas salvas com sucesso!")
+          $(".close").trigger('click');
+        }else{
+          alert("Não foi possivel salvar!")
+        }
+      }).fail(function () {
+          swal('Atenção', 'Ocorreu um erro!', 'error');
+      });
+    }else{
+      alert("Existem notas maiores que 100 e não é possivel salvar");
+    }
+
+  }
+  
+  $(document).on('click', '#fechar', fechar);
+
+  function fechar(){
+    $(".close").trigger('click');
+  }
+
+  $(".inputnota").keypress(function (evt){
+    var theEvent = evt || window.event;
+    var key = theEvent.keyCode || theEvent.which;
+    key = String.fromCharCode( key );
+    var regex = /[-\d\.\,]/; // dowolna liczba (+- ,.) :)
+    var objRegex = /^-?\d*[\.\,]?\d*$/;
+    var val = $(evt.target).val();
+    if(!regex.test(key) || !objRegex.test(val+key) || 
+            !theEvent.keyCode == 46 || !theEvent.keyCode == 8) {
+        theEvent.returnValue = false;
+        if(theEvent.preventDefault) theEvent.preventDefault();
+    };
+}); 
+</script>

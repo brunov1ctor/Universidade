@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Universidade</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="box-shadow">                
+                
+                    <ul class="barra-menu">
+                        <li class="barra-item">
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Universidade</a>
+                        </li>
+                        <li class="barra-item">
+                            <a class="nav-link text-dark" asp-controller="Alunos" asp-action="Index">Alunos</a>
+                        </li>
+                        <li class="barra-item">
+                            <a class="nav-link text-dark" asp-controller="Cursos" asp-action="Index">Meus Cursos</a>
+                        </li>
+                        <li class="barra-item">
+                            <a class="nav-link text-dark" asp-controller="Disciplinas" asp-action="Index">Listar Disciplinas</a>
+                        </li>
+                        <li class="barra-item">
+                            <a class="nav-link text-dark" asp-controller="Notas" asp-action="Index">Notas</a>
+                        </li>
+                        
+                        
+                        <li class="barra-item">
+                            <div class="dropdown">
+                                <a href="#" class="nav-link text-dark dropdown-toggle" data-toggle="dropdown">
+                                    Relatórios
+                                </a>
+                                <ul class="azul-barra dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <li class="dropdown-item text-dark">@Html.ActionLink("Relatorio do Curso", "Index", "AprovacaoCurso", null, new { target = "_self" })</li>
+                                    <li class="dropdown-item">@Html.ActionLink("Relatorio de Disciplina", "Index", "AprovacaoDisciplina")</li>
+                                    <li class="dropdown-item">@Html.ActionLink("Relatorio do Aluno", "Index", "AprovacaoAluno")</li>
+                                </ul>
+                            </div>
+                        </li>
+
+                    </ul>
+                
+            </div>
+        </nav>
+    </header>
+    <div class="pagina-inicial">
+        <main>
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div>
+            &copy; 2022 - Universidade 
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

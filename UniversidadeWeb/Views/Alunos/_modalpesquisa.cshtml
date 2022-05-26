@@ -1,0 +1,102 @@
+@model Universidade.Models.AlunocomCurso;
+
+<div>
+  <table class="table" id="tabela">
+    <thead>
+      <tr>
+        <th scope="col">Nome</th>
+        <th scope="col">Data de inicio</th>
+        <th scope="col">Data de encerramento</th>
+        <th scope="col">Selecionar</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach(var item in Model.cursos)
+      {
+        <tr id = "linha">
+          <td>@item.nome</td>
+          <td>@item.data_inicio</td>
+          <td>@item.data_encerramento</td>
+          <td>
+            <div>
+              <input data-value="@item.id" type="checkbox" id="add" name="add">
+            </div>  
+          </td>
+        </tr>
+      }
+
+    </tbody>
+  </table>
+  
+    <div class="box-btn">
+      <button type="button" id="matricular" class="btn btn-outline-success">Matricular</button>
+      <button type="button" id="fechar" class="btn btn-outline-danger" data-dismiss="modal">Fechar</button>
+    </div>    
+  
+</div>
+
+<script>
+  $(document).off().on('click', '#matricular', matricular);
+
+  function matricular() {  
+    
+    var url = "@Url.Action("Matricular", "Alunos")";      
+    
+    var id_aluno = parseFloat("@Model.aluno.id");
+    var cursos = $('input[name="add"]:checked').toArray().map(function(check) { 
+        return parseFloat($(check).attr("data-value")); 
+    });
+    var ano_ = parseInt(document.getElementById("_ano").value);
+    var sem = parseInt(document.getElementById("_semestre").value);
+    //$(this).hide(); //so esconde o botão adicionar
+
+    $.ajax(url, {
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+          "aluno_id":id_aluno,
+          "curso_list":cursos,
+          "ano":ano_,
+          "semestre":sem
+      }),
+    }).done(function (response) {
+      if(response){
+        alert("Matriculado com sucesso!")
+        recarregar()
+      }else{
+        alert("Não foi possivel se matricular no curso!")
+      }
+    }).fail(function () {
+        swal('Atenção', 'Ocorreu um erro!', 'error');
+    });
+        
+  }
+  
+
+  function recarregar(){
+    var url = "@Url.Action("ModalFiltro", "Alunos")"     
+    var pesquisar = document.getElementById("_nome").value
+    var ano = document.getElementById("_ano").value
+    var sem = document.getElementById("_semestre").value
+    var id_aluno = "@Model.aluno.id"
+    $.ajax(url, {
+      method: 'Get',
+      data: {aluno_id:id_aluno,
+             ano:ano,
+             semestre:sem,
+             search:pesquisar},
+    }).done(function (response) {
+      $("#div_vazia").html(response)
+    }).fail(function () {
+        swal('Atenção', 'Ocorreu um erro!', 'error')
+    });  
+
+  }
+
+  $(document).on('click', '#fechar', fechar);
+
+  function fechar(){
+    location.reload()
+  }
+
+</script>

@@ -1,0 +1,78 @@
+@model Universidade.Models.CursoModel
+@{
+    ViewData["Title"] = "Cadastro de Cursos";
+}
+
+<div class="text-center">
+    <br>
+    <h2>Cadastrar Curso</h2>
+    <br>
+</div>
+
+<form>
+      <div class="form-group">
+        <label asp-for="nome" class="control-label">Nome: </label>
+        <input asp-for="nome" id="nome" class="form-control" maxlength="100" required/>
+        <span asp-validation-for="nome" class="text_danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="data_inicio" class="control-label">Data de Inicio: </label>
+        <input asp-for="data_inicio" id="data_inicio" type="date" class="form-control" required/>
+        <span asp-validation-for="data_inicio" class="text_danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="data_encerramento" class="control-label">Data de Encerramento: </label>
+        <input asp-for="data_encerramento" id="data_encerramento" type="date" class="form-control"required/>
+        <span asp-validation-for="data_encerramento" class="text_danger"></span>
+      </div>
+      <br>
+      <button type="submit" id="btn_cadastrar" class="btn btn-primary" asp-controller="Cursos" asp-action="Index">Cadastrar</button>
+      <a class="btn btn-secondary" asp-controller="Home" asp-action="Index">voltar</a>
+</form>
+
+<script>
+  $(document).submit(function () {
+
+    var url = "@Url.Action("ValidaNome", "Cursos")";      
+    var nome = document.getElementById("nome").value;
+    var inicio = document.getElementById("data_inicio").value;
+    var encerramento = document.getElementById("data_encerramento").value;
+    event.preventDefault();
+
+    $.ajax(url, {
+      method: 'Get',
+      data: {nome},
+    }).done(function (response) {
+      if(!response.valido){
+          alert('Um curso com este nome já existe')               
+      }else{
+        criar(nome,inicio,encerramento)
+      }
+    }).fail(function () {
+        swal('Atenção', 'Ocorreu um erro!', 'error');
+    });
+        
+  });
+
+  function criar(nome,inicio,encerramento){
+
+    var novo = "@Url.Action("Criar", "Cursos")";
+    
+    $.ajax(novo, {
+    method: 'Get',
+    data: {nome:nome,
+          data_inicio:inicio,
+          data_encerramento:encerramento}
+    }).done(function(valido){
+      if(valido.valido){
+        alert('Curso criado com sucesso')
+        window.location.href = "@Url.Action("Index", "Cursos")"
+      }else{
+        alert('Não foi possivel criar o Curso')
+      }
+    }).fail(function(){
+      console.log("Erro")
+    });
+  }
+
+</script>

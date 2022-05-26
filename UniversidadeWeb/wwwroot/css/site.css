@@ -1,0 +1,114 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+  color: black;
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+  color: #000000;
+}
+
+.azul-barra{
+  background-color: rgb(137 156 177);
+}
+
+.barra-menu{
+display: flex;
+list-style: none;
+padding: 20px;
+}
+.barra-item{
+margin: 5px;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+.box-shadow {
+  background-color: rgb(22 60 102 / 50%);
+  box-shadow: 0 2.25rem 4.75rem rgb(15 71 149 / 80%);
+}
+.box-btn {
+  background-color: #97a0b430;
+    margin: 20px;
+    border: 4px solid #004085;
+    left: 0%;
+    padding: 30px 20px 30px;
+    position: relative;
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+.btn-inicio-main{
+display: inline;
+position: relative;
+right: 600px;
+}
+.form-inputs {
+  margin: 2rem;
+}
+
+.pagina-inicial{
+  margin: 30px;
+  background: rgb(196 202 218);
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2.25rem 4.75rem rgb(15 71 149 / 80%);
+}
+
+.form-interno{
+  display: flex;
+padding: 10px;
+}
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  color:#6c757d!important;
+  position: absolute;
+  padding: 30px;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px; /* Vertically center the text there */
+}

@@ -1,0 +1,98 @@
+@model Universidade.Models.AlunoModel
+@{
+    ViewData["Title"] = "Cadastro de Alunos";
+}
+
+<div class="text-center">
+    <br>
+    <h2>Cadastrar Aluno</h2>
+    <br>
+</div>
+
+<form id="form-criar">
+      <div class="form-group">
+        <label asp-for="nome" class="control-label">Nome: </label>
+        <input asp-for="nome" class="form-control" maxlength="100" required/>
+        <span asp-validation-for="nome" class="text_danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="data_nascimento" class="control-label">Data de nascimento: </label>
+        <input asp-for="data_nascimento" type="date" class="form-control" required/>
+        <span asp-validation-for="data_nascimento" class="text_danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="email" class="control-label">Email: </label>
+        <input asp-for="email" class="form-control" maxlength="150" required/>
+        <span asp-validation-for="email" class="text_danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="telefone" class="control-label">Telefone: </label>
+        <input asp-for="telefone" class="form-control" maxlength="20" required/>
+        <span asp-validation-for="telefone" class="text_danger" ></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="cpf" class="control-label">CPF: </label>
+        <input asp-for="cpf" class="form-control" id="cpf" maxlength="11"/>
+        <span asp-validation-for="cpf" class="text_danger"></span>
+      </div>
+      <br>
+      <button type="submit" id="btn_cadastrar" class="btn btn-primary" asp-controller="Alunos" asp-action="Criar">Cadastrar</button>
+      <a class="btn btn-secondary" asp-controller="Home" asp-action="Index">voltar</a>
+</form>
+
+<script>
+  
+  $(document).ready(function () {  
+    $(document).on('change', '#cpf', change_cpf);   
+  })
+  
+  $(document).submit(function() {
+    var novo_nome = document.getElementById("nome").value
+    var novo_data_nasc = document.getElementById("data_nascimento").value
+    var novo_email = document.getElementById("email").value
+    var novo_telefone = document.getElementById("telefone").value
+    var novo_cpf = document.getElementById("cpf").value
+    event.preventDefault()
+    var url = "@Url.Action("Criar", "Alunos")"
+    $.ajax(url, {
+      method: 'Get',
+      data: {nome:novo_nome,
+             data_nascimento:novo_data_nasc,
+             email:novo_email,
+             telefone:novo_telefone,
+             cpf:novo_cpf}
+    }).done(function (response) {
+      if(!response.valido){
+        alert('Não foi possivel criar o Aluno')               
+      }else{
+        alert("Aluno criado com sucesso !")
+        window.location.href = "@Url.Action("Index", "Alunos")"
+      }
+    }).fail(function () {
+      swal('Atenção', 'Ocorreu um erro!', 'error')
+    });
+
+    if($("#cpf").val()== null || $("#cpf").val() ==""){
+      alert('Preencha o campo cpf para continuar')      
+      return false;
+    }
+  }) // pode ser tb no html ... required />
+
+  function change_cpf() {
+    var novo_cpf = document.getElementById("cpf").value;
+    var url = "@Url.Action("ValidaCpf", "Alunos")";
+    $.ajax(url, {
+      method: 'Get',
+      data: {cpf:novo_cpf},
+    }).done(function (response) {
+      if(!response.valido){
+          document.getElementById("btn_cadastrar").disabled = true;
+          alert('Cpf Repetido ou não está no formato valido')
+      }else{
+        document.getElementById("btn_cadastrar").disabled = false; 
+      }
+    }).fail(function () {
+      swal('Atenção', 'Ocorreu um erro!', 'error');
+    });
+  } 
+</script>

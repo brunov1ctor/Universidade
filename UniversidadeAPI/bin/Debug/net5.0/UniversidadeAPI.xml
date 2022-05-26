@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>UniversidadeAPI</name>
+    </assembly>
+    <members>
+        <member name="M:Universidade.Controllers.AlunosController.Listar">
+            <summary>
+            Lista todos os alunos
+            </summary>
+            <returns>
+            retorna a lista de alunos 
+            </returns>
+            <response code="200">Consulta com sucesso</response>
+            <response code="400">solicitação não foi processada</response>
+            <response code="500">Conexão com o banco falhou</response>
+        </member>
+        <member name="M:Universidade.Controllers.AlunosController.Criar(Universidade.Models.AlunosemId)">
+             <summary>
+             Criar um aluno
+             </summary>
+             <returns>
+             retorna numero de alunos criado 
+             </returns>
+             <remarks>
+             Sample request:
+            
+                 POST /Todo
+                 {
+                    "nome": "Item #1",
+                    "data_nascimento": data,
+                    "email": "Item #2"
+                    "telefone": "Item #3",
+                    "cpf": "Item #4",
+                 }
+            
+             </remarks>
+             <response code="200">Criado com sucesso</response>
+             <response code="406">CPF inválido</response>
+        </member>
+        <member name="M:Universidade.Controllers.AlunosController.Atualizar(System.Int32,Universidade.Models.AlunosemId)">
+            <summary>
+            Atualiza um aluno
+            </summary>
+            <returns>
+            retorna o numero de linhas atualizadas 
+            </returns>
+            <response code="200">Atualizado com sucesso</response>
+            <response code="404">Aluno não encontrado</response>
+        </member>
+        <member name="M:Universidade.Controllers.AlunosController.Deletar(System.Int32)">
+            <summary>
+            Deleta um aluno
+            </summary>
+            <returns>
+            retorna o numero de linhas deletadas
+            </returns>
+        </member>
+        <member name="M:Universidade.Controllers.CursosController.Listar">
+            <summary>
+            Lista todos os cursos
+            </summary>
+            <returns>
+            retorna a lista de cursos
+            </returns>
+        </member>
+        <member name="M:Universidade.Controllers.CursosController.Criar(Universidade.Models.CursosemId)">
+            <summary>
+            Cria um curso
+            </summary>
+            <returns>
+            retorna o numero de cursos criados
+            </returns>
+        </member>
+        <member name="M:Universidade.Controllers.CursosController.Atualizar(System.Int32,Universidade.Models.CursosemId)">
+            <summary>
+            Atualiza um cursos
+            </summary>
+            <returns>
+            retorna o numero de linha atualizadas
+            </returns>
+        </member>
+        <member name="M:Universidade.Controllers.CursosController.Deletar(System.Int32)">
+            <summary>
+            Deleta um curso
+            </summary>
+            <returns>
+            retorna o numero de linhas deletadas
+            </returns>
+        </member>
+        <member name="M:Universidade.Controllers.CursosController.IncluirDisciplina(System.Int64,System.Int64)">
+            <summary>
+            Inclui uma nova disciplina no curso
+            </summary>
+            <returns>
+            retorna o numero de disciplinas inseridas
+            </returns>
+        </member>
+        <member name="M:Universidade.Controllers.DisciplinasController.Listar">
+            <summary>
+            Lista todas as disciplinas
+            </summary>
+            <returns>
+            retorna a lista de disciplinas
+            </returns>
+        </member>
+        <member name="M:Universidade.Controllers.DisciplinasController.Criar(Universidade.Models.DisciplinasemId)">
+            <summary>
+            Cria uma nova disciplina
+            </summary>
+            <returns>
+            retorna o numero de disciplinas criadas
+            </returns>
+        </member>
+        <member name="M:Universidade.Controllers.DisciplinasController.Atualizar(System.Int32,Universidade.Models.DisciplinasemId)">
+            <summary>
+            Atualiza uma disciplina
+            </summary>
+            <returns>
+            retorna o numero de linhas atualizadas
+            </returns>
+        </member>
+        <member name="M:Universidade.Controllers.DisciplinasController.Deletar(System.Int32)">
+            <summary>
+            Deleta uma disciplina
+            </summary>
+            <returns>
+            retorna o numero de linhas deletadas
+            </returns>
+        </member>
+        <member name="T:Validacao.ValidaCPF">
+            <summary>
+            Realiza a validação do CPF
+            </summary>
+        </member>
+    </members>
+</doc>

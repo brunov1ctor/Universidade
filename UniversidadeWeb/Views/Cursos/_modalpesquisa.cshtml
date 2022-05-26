@@ -1,0 +1,71 @@
+@model Universidade.Models.CursocomDisciplinas
+
+<div>
+  <table class="table" id="tabela">
+    <thead>
+      <tr>
+        <th scope="col">Nome</th>
+        <th scope="col">Carga Horaria</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach(var item in Model.disciplinas)
+      {
+        <tr id = "linha">
+          <td>@item.nome</td>
+          <td>@item.carga_horaria</td>
+          <td>
+            <div class="btn-group" role="group">  
+              <button data-value="@item.id" id="add" type="button" class="btn btn-outline-success">Adicionar</button>
+            </div>  
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<script>
+  $(document).on('click', '#add', add);
+
+  function add() {  
+
+    var url = "@Url.Action("IncluirDisciplina", "Cursos")";      
+    var id_disc = $(this).attr("data-value");
+    var id_curso = "@Model.curso.id"
+    //$(this).hide(); //so esconde o botão adicionar
+    
+    $.ajax(url, {
+      method: 'Get',
+      data: {curso_id:id_curso,
+             disciplina_id:id_disc},
+    }).done(function (response) {
+      if(response){
+        alert("Disciplina inserida com sucesso!")
+        recarregar()
+      }else{
+        alert("Não foi possivel inserir a disciplina!")
+      }
+    }).fail(function () {
+        swal('Atenção', 'Ocorreu um erro!', 'error');
+    });
+        
+  }
+
+  function recarregar(){
+    var url = "@Url.Action("ModalFiltro", "Cursos")"     
+    var nome = document.getElementById("_nome").value
+    var id_curso = "@Model.curso.id"
+    $.ajax(url, {
+      method: 'Get',
+      data: {curso_id:id_curso,
+            search:nome},
+    }).done(function (response) {
+      $("#div_vazia").html(response)
+    }).fail(function () {
+        swal('Atenção', 'Ocorreu um erro!', 'error')
+    });  
+
+  }
+
+</script>

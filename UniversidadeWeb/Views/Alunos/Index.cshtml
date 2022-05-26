@@ -1,0 +1,57 @@
+﻿@model List<Universidade.Models.AlunoModel>
+@{
+    ViewData["Title"] = "Alunos";
+}
+<div class="btn-inicio-main">
+<a asp-controller="Alunos" asp-action="Inserir" class="btn btn-outline-success">Novo Aluno</a>
+</div>
+
+<div class="text-center">
+    <h1 class="display-4">Cadastro de Alunos</h1>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      
+      <th scope="col">Nome</th>
+      <th scope="col">Idade</th>
+      <th scope="col">Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach(var item in Model)
+    {
+        <tr>
+          <td>@item.nome</td>    
+          @{
+            DateTime DataNascimento = item.data_nascimento;
+            int Anos = new DateTime(DateTime.Now.Subtract(DataNascimento).Ticks).Year - 1;
+            DateTime AnosTranscorridos = DataNascimento.AddYears(Anos);
+            int Meses = 0;
+            for (int i = 1; i <= 12; i++)
+            {
+                if (AnosTranscorridos.AddMonths(i) == DateTime.Now)
+                {
+                    Meses = i;
+                    break;
+                }
+                else if (AnosTranscorridos.AddMonths(i) >= DateTime.Now)
+                {
+                    Meses = i - 1;
+                    break;
+                }
+            }
+            int Dias = DateTime.Now.Subtract(AnosTranscorridos.AddMonths(Meses)).Days;
+          }
+          <td> @Anos anos @Meses meses @Dias dias</td>
+          <td>@item.email</td>
+          <td>
+              <div class="btn-group" role="group">  
+                  <a asp-controller="Alunos" asp-action="Atualizar_get" asp-route-id="@item.id" class="btn btn-outline-primary">Editar</a>
+              </div>  
+          </td>
+        </tr>
+    }
+  </tbody>
+</table>

@@ -1,0 +1,82 @@
+@model List<Universidade.Models.PesquisaNota>
+
+<div>
+  <table class="table" id="tabela">
+    <thead>
+      <tr>
+        <th scope="col">Curso</th>
+        <th scope="col">Disciplina</th>
+        <th scope="col">Ano/Semestre</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach(var item in Model)
+      {
+        <tr id = "linha">
+          <td>@item.curso</td>
+          <td>@item.disciplina</td>
+          <td>@item.ano / @item.semestre</td>
+          <td>
+            <!-- Button trigger modal -->
+            <button data-curso_id="@item.curso_id" data-disciplina_id="@item.disciplina_id" 
+            data-ano="@item.ano" data-semestre="@item.semestre" type="button" 
+            class="btn btn-outline-success VerNotas" data-toggle="modal" data-target="#myModal">Ver Notas</button> 
+          </td>
+        </tr>
+      }
+
+    </tbody>
+  </table>
+  
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title" id="myModalLabel">Lançar Notas</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>       
+      </div>
+        Curso: @Model[0].curso Disciplina: @Model[0].disciplina
+        <div class="modal-body">
+            
+        </div>      
+      
+    </div> 
+  </div>
+</div>
+
+<script>
+  $(document).on('click', '.VerNotas', modal)
+
+  function modal(){
+    
+    var url = "@Url.Action("LancarNotas", "Notas")";
+    var id_curso = parseFloat($(this).attr("data-curso_id"));
+    var id_disciplina = parseFloat($(this).attr("data-disciplina_id"));
+    var sem = parseInt($(this).attr("data-semestre"));
+    var ano = parseInt($(this).attr("data-ano"));
+
+    $.ajax(url, {
+      method: 'POST',
+      contentType: 'application/json',
+      data:JSON.stringify({
+          "disciplina_id":id_disciplina,
+          "curso_id":id_curso,
+          "ano":ano,
+          "semestre":sem,
+      }),
+    }).done(function (response) {
+      
+      $mymodal = $("#myModal");
+      //update the modal's body with the response received
+      $mymodal.find("div.modal-body").html(response);
+      // Show the modal
+      $mymodal.modal("show");
+    }).fail(function () {
+        swal('Atenção', 'Ocorreu um erro!', 'error');
+    });
+
+  }
+
+</script> 

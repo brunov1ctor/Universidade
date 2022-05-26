@@ -1,0 +1,156 @@
+@model Universidade.Models.AlunocomCurso
+@{
+    ViewData["Title"] = "Editar Aluno";
+}
+
+<div class="text-center">
+    <br>
+    <h2>Editar Aluno</h2>
+    <br>
+</div>
+
+<form>
+      <div class="form-group">
+        <label asp-for="aluno.nome" class="control-label">Nome: </label>
+        <input asp-for="aluno.nome" class="form-control" maxlength="100" required/>
+        <span asp-validation-for="aluno.nome" class="text_danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="aluno.data_nascimento" class="control-label">Data de nascimento: </label>
+        <input asp-for="aluno.data_nascimento" type="date" class="form-control" required/>
+        <span asp-validation-for="aluno.data_nascimento" class="text_danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="aluno.email" class="control-label">Email: </label>
+        <input asp-for="aluno.email" class="form-control" maxlength="150" required/>
+        <span asp-validation-for="aluno.email" class="text_danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="aluno.telefone" class="control-label">Telefone: </label>
+        <input asp-for="aluno.telefone" class="form-control" readonly/>
+        <span asp-validation-for="aluno.telefone" class="text_danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="aluno.cpf" class="control-label">CPF: </label>
+        <input asp-for="aluno.cpf" class="form-control" readonly/>
+        <span asp-validation-for="aluno.cpf" class="text_danger"></span>
+      </div>
+       
+      <br>
+      <button type="submit" class="btn btn-primary" asp-controller="Alunos" asp-action="Atualizar_post" asp-route-id="@Model.aluno.id">Registrar</button>
+      <a class="btn btn-secondary" asp-controller="Home" asp-action="Index">voltar</a>
+</form>
+
+<div>
+  <br>
+  <table class="table" id="tabela">
+    <thead>
+      <tr>
+        <th scope="col">Cursos</th>
+        <th scope="col">Data de início</th>
+        <th scope="col">Data de encerramento</th>      
+      </tr>
+    </thead>
+    <tbody>
+      @foreach(var cursos in Model.cursos)
+      {
+        <tr>
+            <td>@cursos.nome</td>
+            <td>@cursos.data_inicio.ToString("dd/MM/yyyy")</td>
+            <td>@cursos.data_encerramento.ToString("dd/MM/yyyy")</td>
+          </tr>
+      }
+    </tbody>
+  </table>
+<div>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">Matricular em um Curso</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title" id="myModalLabel">Matricular</h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>       
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="control-label">Ano: </label>
+            @{int ano = DateTime.Now.Year;
+            <SELECT id="_ano" >
+              <OPTION VALUE=@ano> @ano</OPTION>
+              <OPTION VALUE=@(ano+1)> @(ano+1)</OPTION>
+              <OPTION VALUE=@(ano+2)> @(ano+2)</OPTION>
+              <OPTION VALUE=@(ano+3)> @(ano+3)</OPTION>
+              <OPTION VALUE=@(ano+4)> @(ano+4)</OPTION>
+            </SELECT>
+            }
+            
+          <label class="control-label">Semestre: </label>
+            <SELECT id="_semestre" >
+              <OPTION VALUE=1> 1° semestre</OPTION>
+              <OPTION VALUE=2> 2° semestre</OPTION>
+            </SELECT>
+
+          <div>
+            <label class="control-label">Nome: </label>
+            <input minlength="3" id="_nome" class="form-control" maxlength="100" required/>
+          </div>
+
+        </div>
+        <button type="button" id="_pesquisar" class="btn btn-primary btn-lg">Pesquisar</button>
+      </div>    
+
+      <div id="div_vazia"></div>        
+      
+    </div> 
+  </div>
+</div>
+
+<script>
+    
+  $(document).on('click', '#_pesquisar', pesquisar)
+  function pesquisar() {  
+    if($("#_nome").val() == ''){
+      alert("A pesquisa está vazia")     
+    }else{
+      var url = "@Url.Action("ModalFiltro", "Alunos")"     
+      var pesquisar = document.getElementById("_nome").value
+      var ano = document.getElementById("_ano").value
+      var sem = document.getElementById("_semestre").value
+      var id_aluno = "@Model.aluno.id"
+      
+      $.ajax(url, {
+        method: 'Get',
+        data: {aluno_id:id_aluno,
+               ano:ano,
+               semestre:sem,
+              search:pesquisar},
+      }).done(function (response) {
+        $("#div_vazia").html(response)
+      }).fail(function () {
+          swal('Atenção', 'Ocorreu um erro!', 'error')
+      });  
+    }  
+  }
+
+
+  $(document).on('change', '#_nome', min3) //caso digite menos que 3 caracteres
+  function min3() {
+
+    if($("#_nome").val().length < 3){
+      alert('A pesquisa precisa ter pelo menos 3 letras');
+      document.getElementById("_pesquisar").disabled = true;       
+    }else{
+      document.getElementById("_pesquisar").disabled = false; 
+    }
+  } 
+
+  $(document).on('click', '.close', refresh)
+  function refresh(){
+    location.reload()
+  }
+</script>
